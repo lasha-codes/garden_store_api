@@ -1,0 +1,34 @@
+{
+  "name": "garden_store_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "prisma generate && tsc && nodemon dist/index.js",
+    "dev": "tsc && nodemon dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.21.1",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^8.2.3",
+    "@types/jsonwebtoken": "^9.0.7",
+    "dotenv": "^16.4.5",
+    "node": "^22.11.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.8.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "nodemon": "^3.1.7",
+    "prisma": "^5.21.1",
+    "typescript": "^5.6.3"
+  }
+}
