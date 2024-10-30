@@ -17,6 +17,7 @@
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.3",
     "@types/jsonwebtoken": "^9.0.7",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "node": "^22.11.0"
   },
