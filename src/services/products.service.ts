@@ -23,3 +23,12 @@ export const retrieveProductsService = async () => {
     throw new CustomError(err, 'Something went wrong', 500)
   }
 }
+
+export const getProductByIdService = async (id: string) => {
+  try {
+    const product = await prisma.product.findUnique({ where: { id } })
+    return product
+  } catch (err) {
+    throw new CustomError(err, 'Something went wrong', 500)
+  }
+}

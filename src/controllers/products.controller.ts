@@ -1,5 +1,6 @@
 import { NextFunction, Response, Request, RequestHandler } from 'express'
 import {
+  getProductByIdService,
   retrieveProductsService,
   uploadProductsService,
 } from '../services/products.service.js'
@@ -25,6 +26,19 @@ export const retrieveProductsController: RequestHandler = async (
   try {
     const products = await retrieveProductsService()
     res.status(200).json({ products })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const getProductByIdController: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const product = await getProductByIdService(req.params.id)
+    res.status(200).json({ product })
   } catch (err) {
     next(err)
   }
