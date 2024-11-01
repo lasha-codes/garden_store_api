@@ -18,6 +18,11 @@ model Product {
   currency        Currency
   color           String?
   qty             Int
+  size            String?
+  brand           String   @default("უბრენდო")
+  model           String?
+  material        String?
+  weight          String?
 }
 
 enum Currency {
