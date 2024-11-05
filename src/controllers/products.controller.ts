@@ -1,6 +1,7 @@
 import { NextFunction, Response, Request, RequestHandler } from 'express'
 import {
   getProductByIdService,
+  retrieveProductsInCart,
   retrieveProductsService,
   uploadProductsService,
 } from '../services/products.service.js'
@@ -53,6 +54,26 @@ export const deleteProductsController: RequestHandler = async (
   try {
     const deletedProducts = await prisma.product.deleteMany()
     res.status(200).json({ deletedProducts })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const retrieveProductsInCartController: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { products } = req.body
+
+    if (!products) {
+      res.status(200).json({ cart: [] })
+    } else {
+      const cart = await retrieveProductsInCart(products)
+
+      res.status(200).json({ cart })
+    }
   } catch (err) {
     next(err)
   }

@@ -32,3 +32,19 @@ export const getProductByIdService = async (id: string) => {
     throw new CustomError(err, 'Something went wrong', 500)
   }
 }
+
+export const retrieveProductsInCart = async (products: string[]) => {
+  try {
+    const cart = await prisma.product.findMany({
+      where: {
+        id: {
+          in: products,
+        },
+      },
+    })
+
+    return cart
+  } catch (err) {
+    throw new CustomError(err, 'Something went wrong', 500)
+  }
+}
