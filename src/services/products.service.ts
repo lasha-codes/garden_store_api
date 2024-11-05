@@ -17,7 +17,7 @@ export const uploadProductsService = async (productsToUpload: Product[]) => {
 
 export const retrieveProductsService = async () => {
   try {
-    const products = await prisma.product.findMany()
+    const products = await prisma.product.findMany({ take: 20 })
     return products
   } catch (err) {
     throw new CustomError(err, 'Something went wrong', 500)
