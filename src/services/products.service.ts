@@ -33,17 +33,29 @@ export const getProductByIdService = async (id: string) => {
   }
 }
 
-export const retrieveProductsInCart = async (products: string[]) => {
+export const retrieveProductsInCart = async (
+  products: { id: string; qty: number }[]
+) => {
   try {
+    const productIds = products.map((product) => product.id)
+
     const cart = await prisma.product.findMany({
       where: {
         id: {
-          in: products,
+          in: productIds,
         },
       },
     })
 
-    return cart
+    const cartWithQuantities = cart.map((product) => {
+      const matchingProduct = products.find((p) => p.id === product.id)
+      return {
+        ...product,
+        qty: matchingProduct ? matchingProduct.qty : 1,
+      }
+    })
+
+    return cartWithQuantities
   } catch (err) {
     throw new CustomError(err, 'Something went wrong', 500)
   }

@@ -18,10 +18,10 @@ model Product {
   currency        Currency
   color           String?
   qty             Int
-  size            String?
   brand           String   @default("უბრენდო")
-  model           String?
   material        String?
+  model           String?
+  size            String?
   weight          String?
 }
 
