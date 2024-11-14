@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import authRouter from './routers/auth.router.js'
 import { errorHandler } from './middlewares/error.handler.js'
 import productsRouter from './routers/products.router.js'
+import stripeRouter from './routers/stripe.router.js'
 
 const app = express()
 dotenv.config()
@@ -24,6 +25,7 @@ app.use(errorHandler)
 
 app.use('/auth', authRouter)
 app.use('/products', productsRouter)
+app.use('/stripe', stripeRouter)
 
 app.listen(PORT, () => {
   console.log(`server is running on http://localhost:${PORT}`)
