@@ -28,6 +28,37 @@ export const createPaymentIntent: RequestHandler = async (
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            display_name: 'Tbilisi Delivery',
+            type: 'fixed_amount',
+            fixed_amount: { amount: 1000, currency: 'gel' },
+            delivery_estimate: {
+              minimum: { unit: 'business_day', value: 1 },
+              maximum: { unit: 'business_day', value: 3 },
+            },
+          },
+        },
+        {
+          shipping_rate_data: {
+            display_name: 'Regional Delivery',
+            type: 'fixed_amount',
+            fixed_amount: { amount: 2000, currency: 'gel' },
+            delivery_estimate: {
+              minimum: { unit: 'business_day', value: 2 },
+              maximum: { unit: 'business_day', value: 5 },
+            },
+          },
+        },
+        {
+          shipping_rate_data: {
+            display_name: 'Ill Pickup The Product',
+            type: 'fixed_amount',
+            fixed_amount: { amount: 0, currency: 'gel' },
+          },
+        },
+      ],
       mode: 'payment',
       success_url: `${process.env.STRIPE_SUCCESS_URL}?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: process.env.ORIGIN,
