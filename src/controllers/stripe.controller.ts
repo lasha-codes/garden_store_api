@@ -126,3 +126,22 @@ export const createPendingIntent = async (
     res.status(500).send({ error: error.message })
   }
 }
+
+export const getPaymentIntent = async (req: Request, res: Response) => {
+  const { paymentIntentId } = req.params
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
+
+    res.status(200).json({
+      success: true,
+      paymentIntent,
+    })
+  } catch (error) {
+    console.error('Error retrieving PaymentIntent:', error.message)
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    })
+  }
+}
