@@ -51,17 +51,10 @@ export const createPaymentIntent: RequestHandler = async (
             },
           },
         },
-        {
-          shipping_rate_data: {
-            display_name: 'Ill Pickup The Product',
-            type: 'fixed_amount',
-            fixed_amount: { amount: 0, currency: 'gel' },
-          },
-        },
       ],
       mode: 'payment',
       success_url: `${process.env.STRIPE_SUCCESS_URL}?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: process.env.ORIGIN,
+      cancel_url: `${process.env.ORIGIN}/checkout`,
       shipping_address_collection: {
         allowed_countries: ['GE'],
       },
@@ -92,6 +85,44 @@ export const retrieveSession: RequestHandler = async (
     }
   } catch (error) {
     console.error('Error retrieving session:', error)
+    res.status(500).send({ error: error.message })
+  }
+}
+
+export const createPendingIntent = async (
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  const { products, metadata } = req.body
+  try {
+    const productDetails = products.map((product: Product) => ({
+      name: product.geo_title.slice(0, 20),
+      price: `${product.price} - gel`,
+      qty: product.qty || 1,
+    }))
+
+    const amount = products.reduce((acc: number, product: Product) => {
+      return acc + product.price * 100 * (product.qty || 1)
+    }, 0)
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: 'gel',
+      payment_method_types: ['card'],
+      metadata: {
+        ...metadata,
+        products: JSON.stringify(productDetails),
+      },
+    })
+
+    res.status(200).json({
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id,
+      success: true,
+    })
+  } catch (error) {
+    console.error('Error creating pending intent:', error)
     res.status(500).send({ error: error.message })
   }
 }
