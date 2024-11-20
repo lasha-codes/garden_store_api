@@ -3,6 +3,7 @@ import {
   getProductByIdService,
   retrieveProductsInCart,
   retrieveProductsService,
+  retrieveSliderProductsService,
   uploadProductsService,
   uploadSliderProduct,
 } from '../services/products.service.js'
@@ -103,6 +104,19 @@ export const uploadSliderProductController: RequestHandler = async (
     } else {
       res.status(201).json({ sliderProduct })
     }
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const retrieveSliderController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const slider = await retrieveSliderProductsService()
+    res.status(200).json({ slider })
   } catch (err) {
     next(err)
   }

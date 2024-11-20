@@ -86,3 +86,18 @@ export const uploadSliderProduct = async (productId: string) => {
     throw new CustomError(err, 'Something went wrong', 500)
   }
 }
+
+export const retrieveSliderProductsService = async () => {
+  try {
+    const slider = await prisma.sliderProduct.findMany({
+      take: 4,
+      include: {
+        product: true,
+      },
+    })
+
+    return slider
+  } catch (err) {
+    throw new CustomError(err, 'Something went wrong', 500)
+  }
+}

@@ -89,7 +89,7 @@ export const retrieveSession: RequestHandler = async (
   }
 }
 
-export const createPendingIntent = async (
+export const createPendingIntent: RequestHandler = async (
   req: Request,
   res: Response,
   _next: NextFunction
@@ -127,7 +127,10 @@ export const createPendingIntent = async (
   }
 }
 
-export const getPaymentIntent = async (req: Request, res: Response) => {
+export const getPaymentIntent: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   const { paymentIntentId } = req.params
 
   try {
