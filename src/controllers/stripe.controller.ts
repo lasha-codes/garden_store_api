@@ -109,8 +109,10 @@ export const createPendingIntent: RequestHandler = async (
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: 'gel',
-      payment_method_types: ['card'],
+      payment_method_types: [],
+      capture_method: 'manual',
       metadata: {
+        status: 'pending⌚',
         ...metadata,
         products: JSON.stringify(productDetails),
       },
@@ -131,9 +133,13 @@ export const getPaymentIntent: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  const { paymentIntentId } = req.params
+  const { paymentIntentId, paymentMethodId } = req.params
 
   try {
+    await stripe.paymentIntents.update(paymentIntentId, {
+      payment_method: paymentMethodId,
+    })
+
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
 
     res.status(200).json({
@@ -146,5 +152,33 @@ export const getPaymentIntent: RequestHandler = async (
       success: false,
       error: error.message,
     })
+  }
+}
+
+export const confirmPaymentIntent: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { paymentIntentId } = req.body
+    if (!paymentIntentId) {
+      res.status(400).json({ message: 'payment intent id must be provided' })
+      return
+    }
+    const confirmedPaymentIntent = await stripe.paymentIntents.update(
+      paymentIntentId,
+      {
+        metadata: {
+          status: 'complete✅',
+        },
+      }
+    )
+    res
+      .status(200)
+      .json({ message: 'payment has been confirmed', confirmedPaymentIntent })
+  } catch (error) {
+    console.error('Error confirming payment:', error.message)
+    next(error)
   }
 }
