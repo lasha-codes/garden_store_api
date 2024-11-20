@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Product {
-  id              String   @id @default(uuid())
+  id              String          @id @default(uuid())
   images          String[]
   geo_title       String
   eng_title       String
@@ -18,11 +18,18 @@ model Product {
   currency        Currency
   color           String?
   qty             Int
-  brand           String   @default("უბრენდო")
+  brand           String          @default("უბრენდო")
   material        String?
   model           String?
   size            String?
   weight          String?
+  SliderProduct   SliderProduct[]
+}
+
+model SliderProduct {
+  id        String  @id @default(uuid())
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
 }
 
 enum Currency {

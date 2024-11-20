@@ -60,3 +60,29 @@ export const retrieveProductsInCart = async (
     throw new CustomError(err, 'Something went wrong', 500)
   }
 }
+
+export const uploadSliderProduct = async (productId: string) => {
+  try {
+    const sliderLength = await prisma.sliderProduct.count()
+    if (sliderLength === 4) {
+      return { error: 'maximum slider length reached', sliderProduct: null }
+    } else {
+      const sliderProduct = await prisma.sliderProduct.create({
+        data: {
+          product: {
+            connect: {
+              id: productId,
+            },
+          },
+        },
+        include: {
+          product: true,
+        },
+      })
+
+      return { error: null, sliderProduct }
+    }
+  } catch (err) {
+    throw new CustomError(err, 'Something went wrong', 500)
+  }
+}

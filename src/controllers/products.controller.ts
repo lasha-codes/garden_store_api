@@ -4,6 +4,7 @@ import {
   retrieveProductsInCart,
   retrieveProductsService,
   uploadProductsService,
+  uploadSliderProduct,
 } from '../services/products.service.js'
 import prisma from '../database/prisma.js'
 
@@ -40,7 +41,7 @@ export const getProductByIdController: RequestHandler = async (
 ) => {
   try {
     const product = await getProductByIdService(req.params.id)
-    res.status(200).json({ product })
+    res.status(201).json({ product })
   } catch (err) {
     next(err)
   }
@@ -73,6 +74,34 @@ export const retrieveProductsInCartController: RequestHandler = async (
       const cart = await retrieveProductsInCart(products)
 
       res.status(200).json({ cart })
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const uploadSliderProductController: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { productId } = req.body
+
+    if (!productId) {
+      res.status(400).json({ error: 'productId must be provided' })
+      return
+    } else if (productId && Number.isInteger(Number(productId))) {
+      res.status(400).json({ error: 'Invalid productId provided' })
+      return
+    }
+
+    const { error, sliderProduct } = await uploadSliderProduct(productId)
+
+    if (error) {
+      res.status(400).json({ error })
+    } else {
+      res.status(201).json({ sliderProduct })
     }
   } catch (err) {
     next(err)
