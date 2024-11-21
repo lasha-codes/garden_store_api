@@ -1,5 +1,6 @@
 import { NextFunction, Response, Request, RequestHandler } from 'express'
 import {
+  finishPurchaseService,
   getProductByIdService,
   retrieveProductsInCart,
   retrieveProductsService,
@@ -109,7 +110,7 @@ export const uploadSliderProductController: RequestHandler = async (
   }
 }
 
-export const retrieveSliderController = async (
+export const retrieveSliderController: RequestHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -117,6 +118,24 @@ export const retrieveSliderController = async (
   try {
     const slider = await retrieveSliderProductsService()
     res.status(200).json({ slider })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const finishPurchaseController: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { cart } = req.body
+    if (!cart) {
+      res.status(200).json({ message: 'cart must be provided' })
+    } else {
+      const updatedProducts = await finishPurchaseService(cart)
+      res.status(200).json({ updatedProducts })
+    }
   } catch (err) {
     next(err)
   }

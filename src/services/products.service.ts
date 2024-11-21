@@ -92,11 +92,60 @@ export const retrieveSliderProductsService = async () => {
     const slider = await prisma.sliderProduct.findMany({
       take: 4,
       include: {
-        product: true,
+        product: {
+          select: {
+            images: true,
+          },
+        },
       },
     })
 
     return slider
+  } catch (err) {
+    throw new CustomError(err, 'Something went wrong', 500)
+  }
+}
+
+export const finishPurchaseService = async (cart: Product[]) => {
+  try {
+    let updatedProducts = []
+    await prisma.$transaction(async (prisma) => {
+      cart.forEach(async (product) => {
+        const { id, qty: purchasedQty } = product
+
+        const currProduct = await prisma.product.findUnique({
+          where: {
+            id: id,
+          },
+        })
+
+        if (!currProduct) {
+          throw new CustomError(null, 'no product found with provided id', 400)
+        }
+
+        if (currProduct.qty < purchasedQty) {
+          throw new CustomError(
+            null,
+            'Insufficient quantity for the product' + '' + currProduct.id,
+            400
+          )
+        }
+
+        const updatedQty = currProduct.qty - purchasedQty
+
+        const updatedProduct = await prisma.product.update({
+          where: {
+            id: id,
+          },
+          data: {
+            qty: updatedQty,
+          },
+        })
+        updatedProducts.push({ ...updatedProduct })
+      })
+    })
+
+    return updatedProducts
   } catch (err) {
     throw new CustomError(err, 'Something went wrong', 500)
   }
