@@ -107,12 +107,12 @@ export const createPendingIntent: RequestHandler = async (
     }, 0)
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount,
+      amount: amount + metadata.shipping_cost * 100,
       currency: 'gel',
       payment_method_types: [],
       capture_method: 'manual',
       metadata: {
-        status: 'pending⌚',
+        status: 'pending🕒',
         ...metadata,
         products: JSON.stringify(productDetails),
       },
@@ -166,11 +166,21 @@ export const confirmPaymentIntent: RequestHandler = async (
       res.status(400).json({ message: 'payment intent id must be provided' })
       return
     }
+
+    const paymentExists = await stripe.paymentIntents.retrieve(paymentIntentId)
+
+    if (!paymentExists) {
+      res
+        .status(400)
+        .json({ message: 'payment intent with this id does not exist' })
+      return
+    }
+
     const confirmedPaymentIntent = await stripe.paymentIntents.update(
       paymentIntentId,
       {
         metadata: {
-          status: 'complete✅',
+          status: 'paid✅',
         },
       }
     )
