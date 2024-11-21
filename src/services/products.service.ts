@@ -108,9 +108,10 @@ export const retrieveSliderProductsService = async () => {
 
 export const finishPurchaseService = async (cart: Product[]) => {
   try {
-    let updatedProducts = []
+    let updatedProducts: Product[] = []
+
     await prisma.$transaction(async (prisma) => {
-      cart.forEach(async (product) => {
+      for (const product of cart) {
         const { id, qty: purchasedQty } = product
 
         const currProduct = await prisma.product.findUnique({
@@ -120,13 +121,13 @@ export const finishPurchaseService = async (cart: Product[]) => {
         })
 
         if (!currProduct) {
-          throw new CustomError(null, 'no product found with provided id', 400)
+          throw new CustomError(null, 'No product found with provided id', 400)
         }
 
         if (currProduct.qty < purchasedQty) {
           throw new CustomError(
             null,
-            'Insufficient quantity for the product' + '' + currProduct.id,
+            `Insufficient quantity for the product with ID ${currProduct.id}`,
             400
           )
         }
@@ -141,12 +142,13 @@ export const finishPurchaseService = async (cart: Product[]) => {
             qty: updatedQty,
           },
         })
-        updatedProducts.push({ ...updatedProduct })
-      })
+
+        updatedProducts.push(updatedProduct)
+      }
     })
 
     return updatedProducts
   } catch (err) {
-    throw new CustomError(err, 'Something went wrong', 500)
+    throw new CustomError(err, 'Something went wrong during purchase', 500)
   }
 }
