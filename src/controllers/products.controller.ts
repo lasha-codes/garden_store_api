@@ -70,7 +70,7 @@ export const retrieveProductsInCartController: RequestHandler = async (
   try {
     const { products } = req.body
 
-    if (!products) {
+    if (!products || products.length === 0) {
       res.status(200).json({ cart: [] })
     } else {
       const cart = await retrieveProductsInCart(products)
