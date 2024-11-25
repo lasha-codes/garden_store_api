@@ -33,6 +33,7 @@ export const sendUsMessageController: RequestHandler = async (
       to: process.env.USER,
       subject: subject,
       text: `Phone number: ${phone}, Full name: ${fullName}, Message: ${message}`,
+      replyTo: email,
     })
 
     res.status(200).json({ message: 'email sent successfully', information })

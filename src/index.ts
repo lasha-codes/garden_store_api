@@ -6,6 +6,7 @@ import { errorHandler } from './middlewares/error.handler.js'
 import productsRouter from './routers/products.router.js'
 import stripeRouter from './routers/stripe.router.js'
 import emailRouter from './routers/nodemailer.router.js'
+import usersRouter from './routers/users.router.js'
 
 const app = express()
 dotenv.config()
@@ -24,6 +25,7 @@ app.use(
 app.use(errorHandler)
 
 app.use('/products', productsRouter)
+app.use('/users', usersRouter)
 app.use('/stripe', stripeRouter)
 app.use('/email', emailRouter)
 
