@@ -1,4 +1,4 @@
-import { clerkClient } from '@clerk/clerk-sdk-node'
+import { clerkClient } from '@clerk/express'
 import CustomError from '../utils/customError.js'
 
 export const retrieveUsersService = async () => {
