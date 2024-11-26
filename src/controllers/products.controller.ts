@@ -5,10 +5,12 @@ import {
   retrieveProductsInCart,
   retrieveProductsService,
   retrieveSliderProductsService,
+  updateProductService,
   uploadProductsService,
   uploadSliderProduct,
 } from '../services/products.service.js'
 import prisma from '../database/prisma.js'
+import { validateProductSchema } from '../validations/products.validation.js'
 
 export const uploadProductsController: RequestHandler = async (
   req: Request,
@@ -135,6 +137,31 @@ export const finishPurchaseController: RequestHandler = async (
     } else {
       const updatedProducts = await finishPurchaseService(cart)
       res.status(200).json({ updatedProducts })
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const updateProductController: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { data, productId } = req.body
+
+    if (!productId) {
+      res.status(400).json({ message: 'product id is required' })
+    }
+
+    const { error } = validateProductSchema(data)
+
+    if (error) {
+      res.status(400).json(error.message)
+    } else {
+      const updatedProduct = await updateProductService(productId, data)
+      res.status(201).json({ updatedProduct })
     }
   } catch (err) {
     next(err)

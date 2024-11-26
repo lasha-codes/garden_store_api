@@ -6,6 +6,7 @@ import {
   retrieveProductsController,
   retrieveProductsInCartController,
   retrieveSliderController,
+  updateProductController,
   uploadProductsController,
   uploadSliderProductController,
 } from '../controllers/products.controller.js'
@@ -20,5 +21,6 @@ productsRouter.get('/retrieve', retrieveProductsController)
 productsRouter.get('/get/:id', getProductByIdController)
 productsRouter.get('/slider/get', retrieveSliderController)
 productsRouter.delete('/delete', deleteProductsController)
+productsRouter.put('/update', updateProductController)
 
 export default productsRouter

@@ -152,3 +152,21 @@ export const finishPurchaseService = async (cart: Product[]) => {
     throw new CustomError(err, 'Something went wrong during purchase', 500)
   }
 }
+
+export const updateProductService = async (
+  productId: string,
+  data: Partial<Product>
+) => {
+  try {
+    const updatedProduct = await prisma.product.update({
+      where: {
+        id: productId,
+      },
+      data: data,
+    })
+
+    return updatedProduct
+  } catch (err) {
+    throw new CustomError(err, 'Something went wrong during purchase', 500)
+  }
+}

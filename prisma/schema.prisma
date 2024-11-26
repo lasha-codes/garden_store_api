@@ -15,7 +15,7 @@ model Product {
   geo_description String
   eng_description String
   price           Int
-  currency        Currency
+  currency        Currency?       @default(lari)
   color           String?
   qty             Int
   brand           String          @default("უბრენდო")
@@ -24,8 +24,8 @@ model Product {
   size            String?
   weight          String?
   SliderProduct   SliderProduct[]
-  youtubeUrl      String?
-  PDF             String?
+  youtubeUrl      String?         @default("")
+  PDF             String?         @default("")
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
 }

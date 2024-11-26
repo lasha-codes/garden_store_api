@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Product" ALTER COLUMN "PDF" SET DEFAULT '',
+ALTER COLUMN "youtubeUrl" SET DEFAULT '';
