@@ -192,3 +192,16 @@ export const confirmPaymentIntent: RequestHandler = async (
     next(error)
   }
 }
+
+export const retrievePayments: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const payments = await stripe.paymentIntents.list({ limit: 10000 })
+    res.status(200).json({ payments })
+  } catch (err) {
+    next(err)
+  }
+}
