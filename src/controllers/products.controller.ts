@@ -120,6 +120,7 @@ export const retrieveSliderController: RequestHandler = async (
 ) => {
   try {
     const slider = await retrieveSliderProductsService()
+    res.setHeader('Cache-Control', 'public, max-age=3600')
     res.status(200).json({ slider })
   } catch (err) {
     next(err)
