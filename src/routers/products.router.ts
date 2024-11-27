@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import {
+  deleteProductController,
   deleteProductsController,
   finishPurchaseController,
   getProductByIdController,
@@ -21,6 +22,7 @@ productsRouter.get('/retrieve', retrieveProductsController)
 productsRouter.get('/get/:id', getProductByIdController)
 productsRouter.get('/slider/get', retrieveSliderController)
 productsRouter.delete('/delete', deleteProductsController)
+productsRouter.delete('/delete/:productId', deleteProductController)
 productsRouter.put('/update', updateProductController)
 
 export default productsRouter

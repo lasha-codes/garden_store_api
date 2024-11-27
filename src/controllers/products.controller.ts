@@ -1,5 +1,6 @@
 import { NextFunction, Response, Request, RequestHandler } from 'express'
 import {
+  deleteProductService,
   finishPurchaseService,
   getProductByIdService,
   retrieveProductsInCart,
@@ -163,6 +164,20 @@ export const updateProductController: RequestHandler = async (
       const updatedProduct = await updateProductService(productId, data)
       res.status(201).json({ updatedProduct })
     }
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const deleteProductController: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { productId } = req.params
+    const deletedProduct = await deleteProductService(productId)
+    res.status(200).json({ deletedProduct })
   } catch (err) {
     next(err)
   }

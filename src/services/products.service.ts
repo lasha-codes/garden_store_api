@@ -170,3 +170,17 @@ export const updateProductService = async (
     throw new CustomError(err, 'Something went wrong during purchase', 500)
   }
 }
+
+export const deleteProductService = async (productId: string) => {
+  try {
+    const deletedProduct = await prisma.product.delete({
+      where: {
+        id: productId,
+      },
+    })
+
+    return deletedProduct
+  } catch (err) {
+    throw new CustomError(err, 'Something went wrong during purchase', 500)
+  }
+}
