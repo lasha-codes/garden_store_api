@@ -8,6 +8,7 @@ import stripeRouter from './routers/stripe.router.js'
 import emailRouter from './routers/nodemailer.router.js'
 import usersRouter from './routers/users.router.js'
 import uploadRouter from './routers/upload.router.js'
+import tbcRouter from './routers/banks/tbc.router.js'
 
 const app = express()
 dotenv.config()
@@ -32,6 +33,7 @@ app.use('/users', usersRouter)
 app.use('/stripe', stripeRouter)
 app.use('/email', emailRouter)
 app.use('/files', uploadRouter)
+app.use('/banks/tbc', tbcRouter)
 
 app.listen(PORT, () => {
   console.log(`server is running on http://localhost:${PORT}`)
